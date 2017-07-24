@@ -1,0 +1,24 @@
+<% include ../partials/header %>
+    <div class='container'>
+        <div class='row' id='show_rental_info'>
+            <h1 class='text-center'>Create a comment for
+                <%=rental.name %>
+            </h1>
+            <div style='width:40%; margin:25px auto;'>
+                <form action='/rentals/<%= rental._id%>/comments' method='POST'>
+                    <div class='form-group'>
+                        <input class='form-control' type="text" placeholder='author' value='<%=currentUser.username%>' readonly>
+                    </div>
+                    <div class='form-group '>
+                        <input class='form-control ' type="text" placeholder='text ' name='comment[text] '>
+                    </div>
+                    <div class='form-group '>
+                        <button type="submit" class='btn btn-lg btn-primary btn-block '>Submit!</button>
+                    </div>
+                </form>
+                <a href="/rentals">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+    <% include ../partials/footer %>

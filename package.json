@@ -1,0 +1,37 @@
+{
+  "name": "favoriterentals",
+  "version": "1.0.0",
+  "description": "Catucci's favorite home rentals in our holidays",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linocatucci/FavoriteRentals.git"
+  },
+  "author": "Lino Catucci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linocatucci/FavoriteRentals/issues"
+  },
+  "homepage": "https://github.com/linocatucci/FavoriteRentals#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "connect-flash": "^0.1.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "geocoder": "^0.2.3",
+    "method-override": "^2.3.9",
+    "moment": "^2.18.1",
+    "mongoose": "^4.11.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "locus": "^2.0.1"
+  }
+}

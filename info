@@ -1,0 +1,18 @@
+1. nested routes rentals :id-> comment: id
+
+            <!-- <h1 class='text-center'>Create a comment for
+                <%=rental.name %>
+            </h1> -->
+
+                                <% if(!currentUser) { %>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Sign Up</a></li>
+
+                        <% } else { %>
+                            <li>
+                                <a href="#">
+                                        Signed is as: <%= currentUser.username %>
+                                    </a>
+                            </li>
+                            <li><a href="/logout">Logout</a></li>
+                            <% } %>
