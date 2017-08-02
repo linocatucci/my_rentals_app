@@ -48,6 +48,36 @@ router.post('/rentals/:id/comments', isLoggedIn, function(req, res) {
     });
 });
 
+// EDIT COMMENT ROUTE
+router.get('/rentals/:id/comments/:comment_id/edit', function(req, res) {
+    Rental.findById(req.params.id, function(err, foundRental) {
+        Comment.findById(req.params.comment_id, function(err, foundComment) {
+            res.render('./comments/edit', {
+                comment: foundComment,
+                rental: foundRental
+            });
+        });
+    })
+});
+
+// UPDATE/PUT COMMENT ROUTE
+router.put('/rentals/:id/comments/:comment_id', function(req, res) {
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
+        if (err) {
+            console.log(err);
+            res.redirect('/rentals/' + req.params.id);
+        } else {
+            console.log('comment is updated!!!');
+            res.redirect('/rentals/' + req.params.id);
+        }
+    });
+});
+
+// DESTROY / DELETE ROUTE 
+router.delete('/rentals/:id/comments/:comment_id', function(req, res) {
+    res.send('THIS IS THE DELETE ROUTE')
+});
+
 // middleware allways has 3 inputs, req, res, next!
 function isLoggedIn(req, res, next) {
     //if the user does not exist redirect to login page

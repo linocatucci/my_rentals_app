@@ -22,10 +22,12 @@
                         <p>
                             <%= rental.description %>
                         </p>
-                        <a href="/rentals/<%=rental._id%>/edit" class='btn btn-xs btn-warning text-left'>Edit</a>
-                        <form action="/rentals/<%=rental._id %>?_method=DELETE" method="POST" id='delete_rental'>
-                            <button type="submit" class="btn btn-xs btn-danger">Delete</button>
-                        </form>
+                        <% if (currentUser && rental.author.id.equals(currentUser._id)) { %>
+                            <a href="/rentals/<%=rental._id%>/edit" class='btn btn-xs btn-warning text-left'>Edit</a>
+                            <form action="/rentals/<%=rental._id %>?_method=DELETE" method="POST" id='delete_rental'>
+                                <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                            </form>
+                            <% } %>
                     </div>
                 </div>
                 <div class='well'>
@@ -41,6 +43,10 @@
                                 <p>
                                     <%= comment.text %>
                                 </p>
+                                <a href="/rentals/<%=rental._id%>/comments/<%=comment._id%>/edit" class='btn btn-xs btn-warning text-left'>Edit</a>
+                                <form action="/rentals/<%=rental._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST" id='delete_rental'>
+                                    <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                                </form>
                             </div>
                         </div>
                         <% }) %>

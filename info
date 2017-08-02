@@ -16,3 +16,7 @@
                             </li>
                             <li><a href="/logout">Logout</a></li>
                             <% } %>
+
+                            <!-- <% if (currentUser.username === rental.auhtor.username) { %> -->
+
+                            <!-- <% } %> -->

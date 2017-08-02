@@ -29,17 +29,21 @@ router.get('/rentals/new', isLoggedIn, function(req, res) {
 
 // POST ROUTE TO CREATE A NEW RENTAL
 router.post('/rentals', isLoggedIn, function(req, res) {
-    var newRental = req.body.rental;
+    // var newRental = req.body.rental;
     // var image = req.body.image;
     // var location = req.body.location;
     // var description = req.body.description;
-
-    // var newRental = {
-    //     name: name,
-    //     image: image,
-    //     location: location,
-    //     description: description
-    // }
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newRental = {
+        name: req.body.name,
+        image: req.body.image,
+        location: req.body.location,
+        description: req.body.description,
+        author: author
+    }
     console.log(newRental);
     Rental.create(newRental, function(err, newCreatedRental) {
         if (err) {
@@ -53,9 +57,8 @@ router.post('/rentals', isLoggedIn, function(req, res) {
 
 // SHOW ROUTE, SHOWS DETAIL INFORMATION OF ONE RENTAL
 router.get('/rentals/:id', function(req, res) {
-    console.log('id van de rental: ' + req.params.id);
+    // console.log('id van de rental: ' + req.params.id);
     Rental.findById(req.params.id).populate('comments').exec(function(err, foundRental) {
-        // console.log(foundRental);
         if (err) {
             console.log(err)
             res.redirect('/rentals')
@@ -67,22 +70,18 @@ router.get('/rentals/:id', function(req, res) {
         }
     });
 });
+
 // EDIT RENTAL ROUTE
-router.get('/rentals/:id/edit', function(req, res) {
+router.get('/rentals/:id/edit', checkRentalOwnership, function(req, res) {
     Rental.findById(req.params.id, function(err, foundRental) {
-        if (err) {
-            console.log(err)
-            res.redirect('/rentals');
-        } else {
-            res.render('./rentals/edit', {
-                rental: foundRental
-            });
-        }
+        res.render('./rentals/edit', {
+            rental: foundRental
+        });
     });
 });
 
 // UPDATE (PUT) RENTAL ROUTE
-router.put('/rentals/:id', function(req, res) {
+router.put('/rentals/:id', checkRentalOwnership, function(req, res) {
     Rental.findByIdAndUpdate(req.params.id, req.body.rental, function(err, updatedRental) {
         if (err) {
             console.log(err)
@@ -95,7 +94,7 @@ router.put('/rentals/:id', function(req, res) {
 });
 
 // DESTROY RENTAL ROUTE
-router.delete('/rentals/:id', function(req, res) {
+router.delete('/rentals/:id', checkRentalOwnership, function(req, res) {
     Rental.findByIdAndRemove(req.params.id, function(err, deletedRental) {
         if (err) {
             console.log(err)
@@ -114,6 +113,26 @@ function isLoggedIn(req, res, next) {
         return next();
     } else {
         res.redirect('/login')
+    }
+}
+
+function checkRentalOwnership(req, res, next) {
+    if (req.isAuthenticated()) {
+        Rental.findById(req.params.id, function(err, foundRental) {
+            if (err) {
+                console.log(err)
+                res.redirect('back');
+            } else {
+                // does user own the rental
+                if (foundRental.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    res.redirect('back');
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
     }
 }
 
