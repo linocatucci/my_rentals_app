@@ -33,6 +33,16 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(__dirname + '/public'));
 
 // use flash messages. Install and require connect-flash
+/*
+1e Install and require connect-flash
+2e set the variable before you redirect req.flash('error' : 'please login first') bv. 'error', 'please login first', 
+kan ook een succes message zijn met een andere text
+3. handle it in the route waarbij je zegt in het object wat je wilt gebruiken in de template, bv.
+    {message: req.flash('error'), of  {message: req.flash('success')}}  
+4. handle it in the template with <%=message%>
+5. nog beter om in de res.locals.message = req.flash();
+*/
+// use flash messages. Install and require connect-flash, then use the flash message in the app
 app.use(flash());
 
 // MethodOverride
@@ -84,6 +94,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next) {
     // whatever we put in res.locals can be used in our templates
     res.locals.currentUser = req.user;
+    // pass in message to every template to show an flash message for error
+    res.locals.error = req.flash('error');
+    // pass in message to every template to show an flash message for error
+    res.locals.success = req.flash('success');
     // you need to have next otherwise it will stop. And it needs to move to the rest of the code in 
     // the route!
     next();

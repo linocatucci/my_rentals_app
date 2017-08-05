@@ -9,9 +9,10 @@ var router = express.Router({
 var Comment = require('../models/comment');
 var Rental = require('../models/rental');
 var passport = require('passport');
+var middleware = require('../middleware/index');
 
 // NEW Form
-router.get('/rentals/:id/comments/new', isLoggedIn, function(req, res) {
+router.get('/rentals/:id/comments/new', middleware.isLoggedIn, function(req, res) {
     Rental.findById(req.params.id, function(err, foundRental) {
         res.render('./comments/new', {
             rental: foundRental
@@ -20,7 +21,7 @@ router.get('/rentals/:id/comments/new', isLoggedIn, function(req, res) {
 });
 
 // POST route
-router.post('/rentals/:id/comments', isLoggedIn, function(req, res) {
+router.post('/rentals/:id/comments', middleware.isLoggedIn, function(req, res) {
     Rental.findById(req.params.id, function(err, foundRental) {
         if (err) {
             console.log(err);
@@ -28,6 +29,7 @@ router.post('/rentals/:id/comments', isLoggedIn, function(req, res) {
         } else {
             Comment.create(req.body.comment, function(err, comment) {
                 if (err) {
+                    req.flash('error', 'Something went wrong');
                     console.log(err)
                 } else {
                     // before to push the comment
@@ -41,6 +43,7 @@ router.post('/rentals/:id/comments', isLoggedIn, function(req, res) {
                     foundRental.save();
                     console.log(comment)
                     console.log('Comment is created!');
+                    req.flash('success', 'Comment is successfully created');
                     res.redirect('/rentals/' + req.params.id);
                 }
             });
@@ -49,7 +52,7 @@ router.post('/rentals/:id/comments', isLoggedIn, function(req, res) {
 });
 
 // EDIT COMMENT ROUTE
-router.get('/rentals/:id/comments/:comment_id/edit', function(req, res) {
+router.get('/rentals/:id/comments/:comment_id/edit', middleware.checkCommentOwnership, function(req, res) {
     Rental.findById(req.params.id, function(err, foundRental) {
         Comment.findById(req.params.comment_id, function(err, foundComment) {
             res.render('./comments/edit', {
@@ -61,7 +64,7 @@ router.get('/rentals/:id/comments/:comment_id/edit', function(req, res) {
 });
 
 // UPDATE/PUT COMMENT ROUTE
-router.put('/rentals/:id/comments/:comment_id', function(req, res) {
+router.put('/rentals/:id/comments/:comment_id', middleware.checkCommentOwnership, function(req, res) {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
         if (err) {
             console.log(err);
@@ -75,18 +78,15 @@ router.put('/rentals/:id/comments/:comment_id', function(req, res) {
 
 // DESTROY / DELETE ROUTE 
 router.delete('/rentals/:id/comments/:comment_id', function(req, res) {
-    res.send('THIS IS THE DELETE ROUTE')
+    Comment.findByIdAndRemove(req.params.comment_id, function(err, deletedComment) {
+        if (err) {
+            console.log(err);
+            res.redirect('back');
+        } else {
+            console.log('comment deleted');
+            req.flash('success', 'Comment deleted');
+            res.redirect('/rentals/' + req.params.id);
+        }
+    });
 });
-
-// middleware allways has 3 inputs, req, res, next!
-function isLoggedIn(req, res, next) {
-    //if the user does not exist redirect to login page
-    var user = req.user;
-    if (req.isAuthenticated()) {
-        return next()
-    } else {
-        res.redirect('/login')
-    }
-}
-
 module.exports = router;

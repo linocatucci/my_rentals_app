@@ -43,3 +43,15 @@
 #delete_rental {
     display: inline-block;
 }
+
+#comment_div {
+    margin-top: 10px;
+}
+
+.flash-message {
+    margin-top: 60px;
+}
+
+.alert {
+    margin-bottom: 0px;
+}

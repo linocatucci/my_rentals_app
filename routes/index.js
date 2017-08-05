@@ -15,7 +15,8 @@ router.get('/', function(req, res) {
 //show register form
 router.get('/register', function(req, res) {
     res.render('./rentals/register');
-})
+});
+
 // handle sign up logic
 router.post('/register', function(req, res) {
     var newUser = new User({
@@ -24,11 +25,13 @@ router.post('/register', function(req, res) {
     User.register(newUser, req.body.password,
         function(err, user) {
             if (err) {
-                console.log(err);
+                // console.log(err.message)
+                req.flash('error', err.message);
                 return res.redirect('/register');
             }
             // login the user in after he has been created!
             passport.authenticate('local')(req, res, function() {
+                req.flash('success', 'Welcome to My Rentals' + ' ' + req.body.username);
                 res.redirect('/rentals');
             });
         });
@@ -39,7 +42,7 @@ router.get('/login', function(req, res) {
     res.render('./rentals/login');
 });
 
-// login the user 
+// LOGIN THE USER
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/rentals',
     failureRedirect: '/login'
@@ -50,18 +53,10 @@ router.post('/login', passport.authenticate('local', {
 // logout route
 router.get('/logout', function(req, res) {
     req.logout();
+    req.flash('success', 'Logged you out!')
     res.redirect('/rentals');
 });
 
-// middleware allways has 3 inputs, req, res, next!
-function isLoggedIn(req, res, next) {
-    //if the user does not exist redirect to login page
-    var user = req.user;
-    if (req.isAuthenticated()) {
-        return next()
-    } else {
-        res.redirect('/login')
-    }
-}
+// middleware allways has 3 inputs, req, res, next
 
 module.exports = router;

@@ -6,6 +6,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var Rental = require('../models/rental');
+var middleware = require('../middleware');
 
 // INDEX ROUTE view all Rentals
 router.get('/rentals', function(req, res) {
@@ -23,12 +24,12 @@ router.get('/rentals', function(req, res) {
 });
 
 // FORM TO ADD NEW RENTALS
-router.get('/rentals/new', isLoggedIn, function(req, res) {
+router.get('/rentals/new', middleware.isLoggedIn, function(req, res) {
     res.render('./rentals/new');
 });
 
 // POST ROUTE TO CREATE A NEW RENTAL
-router.post('/rentals', isLoggedIn, function(req, res) {
+router.post('/rentals', middleware.isLoggedIn, function(req, res) {
     // var newRental = req.body.rental;
     // var image = req.body.image;
     // var location = req.body.location;
@@ -72,7 +73,7 @@ router.get('/rentals/:id', function(req, res) {
 });
 
 // EDIT RENTAL ROUTE
-router.get('/rentals/:id/edit', checkRentalOwnership, function(req, res) {
+router.get('/rentals/:id/edit', middleware.checkRentalOwnership, function(req, res) {
     Rental.findById(req.params.id, function(err, foundRental) {
         res.render('./rentals/edit', {
             rental: foundRental
@@ -81,7 +82,7 @@ router.get('/rentals/:id/edit', checkRentalOwnership, function(req, res) {
 });
 
 // UPDATE (PUT) RENTAL ROUTE
-router.put('/rentals/:id', checkRentalOwnership, function(req, res) {
+router.put('/rentals/:id', middleware.checkRentalOwnership, function(req, res) {
     Rental.findByIdAndUpdate(req.params.id, req.body.rental, function(err, updatedRental) {
         if (err) {
             console.log(err)
@@ -94,7 +95,7 @@ router.put('/rentals/:id', checkRentalOwnership, function(req, res) {
 });
 
 // DESTROY RENTAL ROUTE
-router.delete('/rentals/:id', checkRentalOwnership, function(req, res) {
+router.delete('/rentals/:id', middleware.checkRentalOwnership, function(req, res) {
     Rental.findByIdAndRemove(req.params.id, function(err, deletedRental) {
         if (err) {
             console.log(err)
@@ -104,36 +105,5 @@ router.delete('/rentals/:id', checkRentalOwnership, function(req, res) {
         }
     });
 });
-
-// middleware allways has 3 inputs, req, res, next!
-function isLoggedIn(req, res, next) {
-    //if the user does not exist redirect to login page
-    var user = req.user;
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/login')
-    }
-}
-
-function checkRentalOwnership(req, res, next) {
-    if (req.isAuthenticated()) {
-        Rental.findById(req.params.id, function(err, foundRental) {
-            if (err) {
-                console.log(err)
-                res.redirect('back');
-            } else {
-                // does user own the rental
-                if (foundRental.author.id.equals(req.user._id)) {
-                    next();
-                } else {
-                    res.redirect('back');
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;
