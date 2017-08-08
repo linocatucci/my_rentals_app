@@ -32,6 +32,6 @@
     "request": "^2.81.0"
   },
   "devDependencies": {
-    "locus": "^2.0.1"
+    // "locus": "^2.0.1"
   }
 }
