@@ -12,7 +12,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var passportLocalMongoose = require('passport-local-mongoose');
 var User = require('./models/user');
-require('locus');
+//require('locus');
 
 // requiring routes
 var rentalRoutes = require('./routes/rentals');
