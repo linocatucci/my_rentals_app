@@ -1,5 +1,37 @@
-<h1>Landing page</h1>
+<!DOCTYPE html>
+<html>
 
-<p>Welcome to my holiday rentals app</p>
+<head>
+    <title>My rentals</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/landing.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript" async></script>
+</head>
 
-<a href="/rentals">View all my rentals</a>
+<body>
+
+    <div class="container">
+        <% if(error && error.length > 0){ %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
+            </div>
+            <% } %>
+                <% if(success && success.length > 0){ %>
+                    <div class="alert alert-success" role="alert">
+                        <%= success %>
+                    </div>
+                    <% } %>
+    </div>
+
+    <div id="landing-header">
+        <h1>Welcome to My Rentall App!</h1>
+        <a href="/rentals" class="btn btn-lg btn-success">View All Rentals</a>
+    </div>
+
+    <ul class="slideshow">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
