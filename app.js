@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var methodOverride = require('Method-Override');
+var methodOverride = require('method-override')
 var flash = require('connect-flash');
 var session = require('express-session');
 var mongoose = require('mongoose');
