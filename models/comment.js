@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 
 // SCHEMA SETUP FOR YELP CAMP CAMPGROUNDS
 var commentSchema = new mongoose.Schema({
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
     text: String,
     author: {
         id: {

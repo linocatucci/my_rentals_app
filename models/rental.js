@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 
 // SCHEMA SETUP FOR My Rental Schema
 var rentalSchema = new mongoose.Schema({
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
     name: String,
     image: String,
     location: String,

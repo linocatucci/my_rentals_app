@@ -104,8 +104,14 @@ app.use(function(req, res, next) {
     res.locals.success = req.flash('success');
     // you need to have next otherwise it will stop. And it needs to move to the rest of the code in 
     // the route!
+    // to use moment in every template
+    res.locals.moment = moment; // this makes moment available as a variable in every EJS page
     next();
 });
+// THIS IS THE SECOND METHOD TO USE MOMENT IN EVERY TEMPLATE
+// to use moment in every template
+// app.locals.moment = moment; // this makes moment available as a variable in every EJS page
+
 
 // use the different route files
 app.use(rentalRoutes);

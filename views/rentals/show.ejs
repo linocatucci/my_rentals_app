@@ -22,6 +22,9 @@
                         <p>
                             <%= rental.description %>
                         </p>
+                        <p>
+                            <em> Submitted By: <strong> <%= rental.author.username %></strong> <span class='pull-right'><%= moment(rental.created_at).fromNow()%></span></em>
+                        </p>
                         <% if (currentUser && rental.author.id.equals(currentUser._id)) { %>
                             <a href="/rentals/<%=rental._id%>/edit" class='btn btn-xs btn-warning text-left'>Edit</a>
                             <form action="/rentals/<%=rental._id %>?_method=DELETE" method="POST" id='delete_rental'>
@@ -39,7 +42,7 @@
                         <div class='row'>
                             <div class='col-md-12' id='comment_div'>
                                 <strong> <%= comment.author.username %></strong>
-                                <span class='pull-right'>10 days ago</span>
+                                <span class='pull-right'><%=moment(comment.created_at).fromNow()%></span>
                                 <p>
                                     <%= comment.text %>
                                 </p>

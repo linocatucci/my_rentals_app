@@ -11,7 +11,7 @@ var middleware = require('../middleware');
 // INDEX ROUTE view all Rentals
 router.get('/rentals', function(req, res) {
     Rental.find({}, function(err, allRentals) {
-        console.log(req.user);
+        // console.log(req.user);
         if (err) {
             console.log(err)
         } else {
