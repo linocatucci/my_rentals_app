@@ -57,6 +57,10 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/myrental_app', {
     useMongoClient: true
 });
+// Mlab database connection
+// mongoose.connect('mongodb://lino:lino01@ds153422.mlab.com:53422/myrental_app', {
+//     useMongoClient: true
+// });
 //  get notified if we connect successfully or if a connection error occurs:
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
