@@ -58,7 +58,7 @@ mongoose.Promise = global.Promise;
 //     useMongoClient: true
 // });
 // Mlab database connection
-mongoose.connect('mongodb://lino:lino01@ds153422.mlab.com:53422/myrental_app', {
+mongoose.connect('mongodb://forel:forel01@ds161262.mlab.com:61262/myrental_app', {
     useMongoClient: true
 });
 //  get notified if we connect successfully or if a connection error occurs:
