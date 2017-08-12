@@ -118,7 +118,11 @@ app.use(rentalRoutes);
 app.use(commentRoutes);
 app.use(indexRoutes);
 
-
-app.listen(3000, function() {
-    console.log('My Favorite Rentals app has started!');
+// // bij Heroku met je dit gebruiken, dit is geen hardcoded
+app.listen(process.env.PORT, process.env.IP, function() {
+    console.log('Server has started for YelpCamp on Heroku!')
 });
+// lokaal opstarten van je app
+// app.listen(3000, function() {
+//     console.log('My Favorite Rentals app has started!');
+// });
