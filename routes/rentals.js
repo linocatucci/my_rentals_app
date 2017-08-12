@@ -7,6 +7,7 @@ var router = express.Router();
 var passport = require('passport');
 var Rental = require('../models/rental');
 var middleware = require('../middleware');
+var geocoder = require('geocoder');
 
 // INDEX ROUTE view all Rentals
 router.get('/rentals', function(req, res) {
@@ -29,30 +30,38 @@ router.get('/rentals/new', middleware.isLoggedIn, function(req, res) {
 });
 
 // POST ROUTE TO CREATE A NEW RENTAL
-router.post('/rentals', middleware.isLoggedIn, function(req, res) {
-    // var newRental = req.body.rental;
-    // var image = req.body.image;
-    // var location = req.body.location;
-    // var description = req.body.description;
+router.post("/rentals", middleware.isLoggedIn, function(req, res) {
+    // get data from form and add to campgrounds array
+    var name = req.body.name;
+    var image = req.body.image;
+    var description = req.body.description;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    var newRental = {
-        name: req.body.name,
-        image: req.body.image,
-        location: req.body.location,
-        description: req.body.description,
-        author: author
-    }
-    console.log(newRental);
-    Rental.create(newRental, function(err, newCreatedRental) {
-        if (err) {
-            console.log(err);
-        } else {
-            // redirect to rentals page
-            res.redirect('/rentals');
-        }
+    geocoder.geocode(req.body.location, function(err, data) {
+        var lat = data.results[0].geometry.location.lat;
+        var lng = data.results[0].geometry.location.lng;
+        var location = data.results[0].formatted_address;
+        var newRental = {
+            name: name,
+            image: image,
+            description: description,
+            author: author,
+            location: location,
+            lat: lat,
+            lng: lng
+        };
+        // Create a new campground and save to DB
+        Rental.create(newRental, function(err, newlyCreated) {
+            if (err) {
+                console.log(err);
+            } else {
+                //redirect back to campgrounds page
+                req.flash('success', 'Successfully created a rental!');
+                res.redirect('/rentals');
+            }
+        });
     });
 });
 
@@ -82,15 +91,41 @@ router.get('/rentals/:id/edit', middleware.checkRentalOwnership, function(req, r
 });
 
 // UPDATE (PUT) RENTAL ROUTE
-router.put('/rentals/:id', middleware.checkRentalOwnership, function(req, res) {
-    Rental.findByIdAndUpdate(req.params.id, req.body.rental, function(err, updatedRental) {
-        if (err) {
-            console.log(err)
-            res.redirect('/rentals');
-        } else {
-            console.log('Rental is updated');
-            res.redirect('/rentals/' + req.params.id);
-        }
+// router.put('/rentals/:id', middleware.checkRentalOwnership, function(req, res) {
+//     Rental.findByIdAndUpdate(req.params.id, req.body.rental, function(err, updatedRental) {
+//         if (err) {
+//             console.log(err)
+//             res.redirect('/rentals');
+//         } else {
+//             console.log('Rental is updated');
+//             res.redirect('/rentals/' + req.params.id);
+//         }
+//     });
+// });
+router.put("/rentals/:id", middleware.checkRentalOwnership, function(req, res) {
+    geocoder.geocode(req.body.location, function(err, data) {
+        var lat = data.results[0].geometry.location.lat;
+        var lng = data.results[0].geometry.location.lng;
+        var location = data.results[0].formatted_address;
+        var newData = {
+            name: req.body.name,
+            image: req.body.image,
+            description: req.body.description,
+            location: location,
+            lat: lat,
+            lng: lng
+        };
+        Rental.findByIdAndUpdate(req.params.id, {
+            $set: newData
+        }, function(err, rental) {
+            if (err) {
+                req.flash("error", err.message);
+                res.redirect("back");
+            } else {
+                req.flash("success", "Successfully Updated!");
+                res.redirect("/rentals/" + rental._id);
+            }
+        });
     });
 });
 

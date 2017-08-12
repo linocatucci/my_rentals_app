@@ -5,6 +5,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Rental = require('../models/rental');
 var passport = require('passport');
 
 // landing page
@@ -20,7 +21,11 @@ router.get('/register', function(req, res) {
 // handle sign up logic
 router.post('/register', function(req, res) {
     var newUser = new User({
-        username: req.body.username
+        username: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        avatar: req.body.avatar,
     });
     User.register(newUser, req.body.password,
         function(err, user) {
@@ -57,6 +62,29 @@ router.get('/logout', function(req, res) {
     res.redirect('/rentals');
 });
 
-// middleware allways has 3 inputs, req, res, next
+router.get('/users/:id', function(req, res) {
+    User.findById(req.params.id, function(err, foundUser) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            res.redirect('/');
+        }
+        Rental.find().where('author.id').equals(foundUser._id).exec(function(err, rentals) {
+            console.log(foundUser)
+            console.log(rentals);
+            if (err) {
+                console.log(err);
+                req.flash('error', err.message);
+                res.redirect('/');
+            }
+            res.render('./users/show', {
+                user: foundUser,
+                rentals: rentals
+            })
+        });
+    });
+});
+
+// middleware allways has 3 inputs, (req, res, next)
 
 module.exports = router;

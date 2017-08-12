@@ -55,3 +55,19 @@
 .alert {
     margin-bottom: 0px;
 }
+
+.user-profile-row {
+    margin-top: 50px;
+}
+
+.rental-show-col {
+    margin-top: 65px;
+}
+
+
+/* Google Maps */
+
+#map {
+    height: 400px;
+    width: 100%;
+}
