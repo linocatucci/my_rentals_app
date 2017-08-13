@@ -20,3 +20,8 @@
                             <!-- <% if (currentUser.username === rental.auhtor.username) { %> -->
 
                             <!-- <% } %> --> 
+1e pass in a message to the flash (key : value pair) bv. 'error', 'please login first', kan ook een 
+succes message zijn.
+2. voordat je redirect.
+3. handle it in the route and in the template. waarbij je zegt in het object wat je wilt gebruiken in 
+de template, {message: req.flash('error'), of  {message: req.flash('success')}}

@@ -43,6 +43,12 @@ You can access them below:
 
 - Password reset - https://youtu.be/UV9FvlTySGg
 
+- Database security with Mlab (https://docs.mongodb.com/tutorials/enable-authentication/)
+
+- heroku developer plan $ ?
+
+- heroku DNS refer to www.linocatucci.com 
+
 
 Stay tuned for more in the coming days!
 
