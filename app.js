@@ -54,13 +54,13 @@ mongoose.Promise = global.Promise;
 
 // create the database yelp_camp with the db connection 
 // {useMongoClient: true} to prevent deprecated message
-// mongoose.connect('mongodb://localhost/myrental_app', {
-//     useMongoClient: true
-// });
-// Mlab database connection
-mongoose.connect('mongodb://forel:forel01@ds161262.mlab.com:61262/myrental_app', {
+mongoose.connect('mongodb://localhost/myrental_app', {
     useMongoClient: true
 });
+// Mlab database connection
+// mongoose.connect('mongodb://forel:forel01@ds161262.mlab.com:61262/myrental_app', {
+//     useMongoClient: true
+// });
 //  get notified if we connect successfully or if a connection error occurs:
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -119,10 +119,10 @@ app.use(commentRoutes);
 app.use(indexRoutes);
 
 // // bij Heroku met je dit gebruiken, dit is geen hardcoded
-app.listen(process.env.PORT, process.env.IP, function() {
-    console.log('Server has started for YelpCamp on Heroku!')
-});
-// lokaal opstarten van je app
-// app.listen(3000, function() {
-//     console.log('My Favorite Rentals app has started!');
+// app.listen(process.env.PORT, process.env.IP, function() {
+//     console.log('Server has started for YelpCamp on Heroku!')
 // });
+// lokaal opstarten van je app
+app.listen(3000, function() {
+    console.log('My Favorite Rentals app has started!');
+});
